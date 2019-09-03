@@ -51,7 +51,7 @@ header img {
 
 .card {
     width: 500px;
-    height: 800px;
+    height: 500px;
     background-color: var(--branco);
     padding: 80px 40px;
     margin: 40px 0px;
@@ -113,7 +113,7 @@ input {
 
 button {
     width: 100%;
-    margin: 16px 0px;
+    margin: 20px 0px;
     font-size: 1.2em;
     border-radius: 5px;
     padding: 10px;
@@ -137,8 +137,23 @@ footer {
     background-color: var(--branco);
 }
 
+.containerLogin {
+    display: flex;
+}
+
 .esquerdo {
-    background-image: url(../img/abstract-login.jpg);
+    background-image: linear-gradient(rgba(183, 39, 255, 0.5), rgba(183, 39, 255, 0.5)), url(../img/abstract-login.jpg);
+    background-size: cover;
+    background-position: right;
+    background-repeat: no-repeat;
     width: 50%;
-    height: 100vw;
+    height: 100vh;
+}
+
+.direito {
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
