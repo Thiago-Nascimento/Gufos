@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace backend
 {
@@ -25,7 +26,9 @@ namespace backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllersWithViews().AddNewtonsoftJson(
+                opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,5 +50,25 @@ namespace backend
                 endpoints.MapControllers();
             });
         }
+
+        // Instalamos o Entity Framework
+        // dotnet tool install --global dotnet-ef
+
+        // Baixamos o pacote SQL Server do Entity Framework
+        // dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+
+        // Baixamos o pacote que ira escrever nossos códigos
+        //  
+
+        // Testamos se os pacotes foram instalados
+        // dotnet restore
+
+        // Testamos a instalação do EF (Entity Framework)
+        // dotnet ef
+
+        // Código que criará o nosso Contexto da Base de Dados e nossos Models
+        // String de conexão
+        // dotnet ef dbcontext scaffold "Server=N-1S-DEV-09\SQLEXPRESS; Database=gufos; User Id=sa; Password=132" Microsoft.EntityFrameworkCore.SqlServer -o Models -d
+        
     }
 }
