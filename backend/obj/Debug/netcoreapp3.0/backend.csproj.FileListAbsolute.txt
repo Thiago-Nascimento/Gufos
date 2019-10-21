@@ -45,3 +45,12 @@ C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.
 C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Newtonsoft.Json.dll
 C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Newtonsoft.Json.Bson.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\backend.xml
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Microsoft.OpenApi.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\FIC\Desktop\Gufos\backend\obj\Debug\netcoreapp3.0\backend.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\FIC\Desktop\Gufos\backend\obj\Debug\netcoreapp3.0\backend.xml

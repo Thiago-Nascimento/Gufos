@@ -14,6 +14,10 @@ namespace backend.Controllers
         gufosContext _contexto = new gufosContext();
 
         // GET: api/Categoria
+        /// <summary>
+        /// Retorna todos as categorias cadastradas
+        /// </summary>
+        /// <returns>Lista com categorias</returns>
         [HttpGet]
         public async Task<ActionResult<List<Categoria>>> Get()
         {

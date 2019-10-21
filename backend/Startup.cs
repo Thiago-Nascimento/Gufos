@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 
 namespace backend
@@ -29,6 +32,16 @@ namespace backend
             services.AddControllersWithViews().AddNewtonsoftJson(
                 opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             );
+
+            // Configuramos o SWAGGER 
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new OpenApiInfo{ Title = "API", Version = "v1"});
+
+                // Definimos o caminho e arquivo temporario de documentação
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"; 
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +51,13 @@ namespace backend
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Usamos efetivamente o SWAGGER
+            app.UseSwagger();
+            // Especificamos o endpoint na aplicação
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+            });
 
             app.UseHttpsRedirection();
 
@@ -69,6 +89,12 @@ namespace backend
         // Código que criará o nosso Contexto da Base de Dados e nossos Models
         // String de conexão
         // dotnet ef dbcontext scaffold "Server=N-1S-DEV-09\SQLEXPRESS; Database=gufos; User Id=sa; Password=132" Microsoft.EntityFrameworkCore.SqlServer -o Models -d
+
+        // SWAGGER
+        // Instalação
+        // dotnet add backend.csproj package SwashBuckle.AspNetCore -v 5.0.0-rc4
+
+        
         
     }
 }

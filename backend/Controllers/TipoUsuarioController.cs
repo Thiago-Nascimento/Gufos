@@ -4,49 +4,53 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+// Adiciona a arvore de objetos 
+// dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+
+
 namespace backend.Controllers
 {
     // Define a rota do controller, e diz que é um controller de API
     [Route("api/[controller]")] 
     [ApiController]
-    public class LocalizacaoController : ControllerBase
+    public class TipoUsuarioController : ControllerBase
     {
         gufosContext _contexto = new gufosContext();
 
-        // GET: api/Localizacao
+        // GET: api/TipoUsuario
         [HttpGet]
-        public async Task<ActionResult<List<Localizacao>>> Get()
+        public async Task<ActionResult<List<TipoUsuario>>> Get()
         {
-            var localizacoes = await _contexto.Localizacao.Include("Evento").ToListAsync();
+            var tipos_usuario = await _contexto.TipoUsuario.Include("Usuario").ToListAsync();
 
-            if(localizacoes == null) {
+            if(tipos_usuario == null) {
                 return NotFound();
             }
 
-            return localizacoes;
+            return tipos_usuario;
         }
         
-        // GET: api/Localizacao/2
+        // GET: api/TipoUsuario/2
         [HttpGet("{id}")]
-        public async Task<ActionResult<Localizacao>> Get(int id)
+        public async Task<ActionResult<TipoUsuario>> Get(int id)
         {
-            var localizacao = await _contexto.Localizacao.FindAsync(id);
+            var tipo_usuario = await _contexto.TipoUsuario.Include("Usuario").FirstOrDefaultAsync(e => e.TipoUsuarioId == id);
 
-            if(localizacao == null) {
+            if(tipo_usuario == null) {
                 return NotFound();
             }
 
-            return localizacao;
+            return tipo_usuario;
         }
 
-        // POST: api/Localizacao
+        // POST: api/TipoUsuario
         [HttpPost]
-        public async Task<ActionResult<Localizacao>> Post(Localizacao localizacao)
+        public async Task<ActionResult<TipoUsuario>> Post(TipoUsuario tipo_usuario)
         {
             try
             {
                 // Tratamento contra SQL Injection
-                await _contexto.AddAsync(localizacao);
+                await _contexto.AddAsync(tipo_usuario);
                 await _contexto.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -54,27 +58,27 @@ namespace backend.Controllers
                 throw;
             }
             
-            return localizacao;
+            return tipo_usuario;
         }
 
         // PUT
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, Localizacao localizacao)
+        public async Task<ActionResult> Put(int id, TipoUsuario tipo_usuario)
         {
-            if(id != localizacao.LocalizacaoId){
+            if(id != tipo_usuario.TipoUsuarioId){
                 return BadRequest();
             }
 
             // Comparamos os atributos que foram modificados através do EF
-            _contexto.Entry(localizacao).State = EntityState.Modified;
+            _contexto.Entry(tipo_usuario).State = EntityState.Modified;
             
             try {
                 await _contexto.SaveChangesAsync(); 
             } catch (DbUpdateConcurrencyException) {
                 // Verfica se o objeto inserido existe no banco
-                var localizacao_valido = await _contexto.Localizacao.FindAsync(id);
+                var tipo_usuario_valido = await _contexto.TipoUsuario.FindAsync(id);
 
-                if(localizacao_valido == null) {
+                if(tipo_usuario_valido == null) {
                     return NotFound();
                 } else {
                     throw;
@@ -84,19 +88,19 @@ namespace backend.Controllers
             return NoContent();
         }
 
-        // DELETE api/localizacao/id
+        // DELETE api/tipo_usuario/id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Localizacao>> Delete(int id){
-            var localizacao = await _contexto.Localizacao.FindAsync(id);
+        public async Task<ActionResult<TipoUsuario>> Delete(int id){
+            var tipo_usuario = await _contexto.TipoUsuario.FindAsync(id);
 
-            if(localizacao == null) {
+            if(tipo_usuario == null) {
                 return NotFound();
             }
 
-            _contexto.Localizacao.Remove(localizacao);
+            _contexto.TipoUsuario.Remove(tipo_usuario);
             await _contexto.SaveChangesAsync();
             
-            return localizacao;
+            return tipo_usuario;
         }
     }
 }
