@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 // Adiciona a arvore de objetos 
 // dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson
@@ -31,6 +32,7 @@ namespace backend.Controllers
         }
         
         // GET: api/Usuario/2
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> Get(int id)
         {

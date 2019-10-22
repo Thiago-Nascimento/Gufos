@@ -14,6 +14,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace backend
 {
@@ -42,6 +45,19 @@ namespace backend
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            // Configuramos o JWT
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+                options.TokenValidationParameters = new TokenValidationParameters {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:key"]))
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +75,8 @@ namespace backend
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
             });
 
+            app.UseAuthentication();    
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -69,6 +87,8 @@ namespace backend
             {
                 endpoints.MapControllers();
             });
+
+            
         }
 
         // Instalamos o Entity Framework
@@ -88,13 +108,16 @@ namespace backend
 
         // Código que criará o nosso Contexto da Base de Dados e nossos Models
         // String de conexão
-        // dotnet ef dbcontext scaffold "Server=N-1S-DEV-09\SQLEXPRESS; Database=gufos; User Id=sa; Password=132" Microsoft.EntityFrameworkCore.SqlServer -o Models -d
+        // dotnet ef dbcontext scaffold "Server=N-1S-DEV-09\SQLEXPRESS; Database=gufos; User Id=sa; Password=132" Microsoft.EntityFrameworkCore.SqlServer -o Models -d\
 
         // SWAGGER
         // Instalação
         // dotnet add backend.csproj package SwashBuckle.AspNetCore -v 5.0.0-rc4
 
-        
+        // JSON WEB TOKEN
+
+        // Adicionamos o pacote JWT
+        // dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 3.0.0       
         
     }
 }
