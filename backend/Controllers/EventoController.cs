@@ -1,8 +1,9 @@
-using backend.Models;
+using backend.Domains;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using backend.Repositories;
 
 // Adiciona a arvore de objetos 
 // dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson
@@ -15,13 +16,13 @@ namespace backend.Controllers
     [ApiController]
     public class EventoController : ControllerBase
     {
-        gufosContext _contexto = new gufosContext();
+        EventoRepository _repositorio = new EventoRepository();
 
         // GET: api/Evento
         [HttpGet]
         public async Task<ActionResult<List<Evento>>> Get()
         {
-            var eventos = await _contexto.Evento.Include("Categoria").Include("Localizacao").ToListAsync();
+            var eventos = await _repositorio.Listar();
 
             if(eventos == null) {
                 return NotFound();
@@ -34,7 +35,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Evento>> Get(int id)
         {
-            var evento = await _contexto.Evento.Include("Categoria").Include("Localizacao").FirstOrDefaultAsync(e => e.EventoId == id);
+            var evento = await _repositorio.BuscarPorID(id);
 
             if(evento == null) {
                 return NotFound();
@@ -49,16 +50,13 @@ namespace backend.Controllers
         {
             try
             {
-                // Tratamento contra SQL Injection
-                await _contexto.AddAsync(evento);
-                await _contexto.SaveChangesAsync();
+                await _repositorio.Salvar(evento);
             }
             catch (DbUpdateConcurrencyException)
             {
                 throw;
             }
-            
-            return evento;
+            return evento;          
         }
 
         // PUT
@@ -67,16 +65,13 @@ namespace backend.Controllers
         {
             if(id != evento.EventoId){
                 return BadRequest();
-            }
-
-            // Comparamos os atributos que foram modificados através do EF
-            _contexto.Entry(evento).State = EntityState.Modified;
+            }                     
             
             try {
-                await _contexto.SaveChangesAsync(); 
+                await _repositorio.Alterar(evento);
             } catch (DbUpdateConcurrencyException) {
                 // Verfica se o objeto inserido existe no banco
-                var evento_valido = await _contexto.Evento.FindAsync(id);
+                var evento_valido = await _repositorio.BuscarPorID(id);
 
                 if(evento_valido == null) {
                     return NotFound();
@@ -91,14 +86,13 @@ namespace backend.Controllers
         // DELETE api/evento/id
         [HttpDelete("{id}")]
         public async Task<ActionResult<Evento>> Delete(int id){
-            var evento = await _contexto.Evento.FindAsync(id);
+            var evento = await _repositorio.BuscarPorID(id);
 
             if(evento == null) {
                 return NotFound();
-            }
+            }           
 
-            _contexto.Evento.Remove(evento);
-            await _contexto.SaveChangesAsync();
+            await _repositorio.Excluir(evento);
             
             return evento;
         }

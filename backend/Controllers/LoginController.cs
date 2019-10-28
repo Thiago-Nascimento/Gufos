@@ -3,7 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using backend.Models;
+using backend.Domains;
+using backend.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,8 +17,7 @@ namespace backend.Controllers
     
     public class LoginController : ControllerBase
     {
-        // Chamamos nosso contexto da base de dados
-        gufosContext _context = new gufosContext();
+        GufosContext _context = new GufosContext();
 
         // Definimos uma variavel para percorre nossos métodos com as configurações obtidas no appSettings.json
         private IConfiguration _config;
@@ -27,15 +27,10 @@ namespace backend.Controllers
             _config = config;
         }
 
-        // Chamamos nosso método para validar o usuario 
-        private Usuario ValidaUsuario(Usuario login) {
+        private Usuario ValidaUsuario(LoginViewModel login) {
             var usuario = _context.Usuario.FirstOrDefault(
                 u => u.Email == login.Email && u.Senha == login.Senha
             );
-
-            if(usuario != null) {
-                usuario = login;
-            }
 
             return usuario;
         }
@@ -69,7 +64,7 @@ namespace backend.Controllers
         // Usamos essa anotação para ignorar a autenticação nesse método
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login([FromBody]Usuario login){
+        public IActionResult Login([FromBody]LoginViewModel login){
             IActionResult response = Unauthorized();
             var user = ValidaUsuario(login);
 

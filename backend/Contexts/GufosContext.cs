@@ -2,15 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace backend.Models
+namespace backend.Domains
 {
-    public partial class gufosContext : DbContext
+    public partial class GufosContext : DbContext
     {
-        public gufosContext()
+        public GufosContext()
         {
         }
 
-        public gufosContext(DbContextOptions<gufosContext> options)
+        public GufosContext(DbContextOptions<GufosContext> options)
             : base(options)
         {
         }
@@ -26,7 +26,7 @@ namespace backend.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=N-1S-DEV-09\\SQLEXPRESS; Database=gufos; User Id=sa; Password=132");
+                optionsBuilder.UseSqlServer("Server=N-1S-DEV-09\\SQLEXPRESS;Database=Gufos;User Id=sa; Password=132;");
             }
         }
 
@@ -35,7 +35,7 @@ namespace backend.Models
             modelBuilder.Entity<Categoria>(entity =>
             {
                 entity.HasIndex(e => e.Titulo)
-                    .HasName("UQ__Categori__7B406B5654E11A35")
+                    .HasName("UQ__Categori__7B406B5698151EE5")
                     .IsUnique();
 
                 entity.Property(e => e.Titulo).IsUnicode(false);
@@ -61,11 +61,11 @@ namespace backend.Models
             modelBuilder.Entity<Localizacao>(entity =>
             {
                 entity.HasIndex(e => e.Cnpj)
-                    .HasName("UQ__Localiza__AA57D6B4EC0220A9")
+                    .HasName("UQ__Localiza__AA57D6B4F2BD3D5D")
                     .IsUnique();
 
                 entity.HasIndex(e => e.RazaoSocial)
-                    .HasName("UQ__Localiza__7DD0287669D07C93")
+                    .HasName("UQ__Localiza__7DD028765142FCA7")
                     .IsUnique();
 
                 entity.Property(e => e.Cnpj)
@@ -84,18 +84,18 @@ namespace backend.Models
                 entity.HasOne(d => d.Evento)
                     .WithMany(p => p.Presenca)
                     .HasForeignKey(d => d.EventoId)
-                    .HasConstraintName("FK__Presenca__Evento__4AB81AF0");
+                    .HasConstraintName("FK__Presenca__Evento__49C3F6B7");
 
                 entity.HasOne(d => d.Usuario)
                     .WithMany(p => p.Presenca)
                     .HasForeignKey(d => d.UsuarioId)
-                    .HasConstraintName("FK__Presenca__Usuari__49C3F6B7");
+                    .HasConstraintName("FK__Presenca__Usuari__4AB81AF0");
             });
 
             modelBuilder.Entity<TipoUsuario>(entity =>
             {
                 entity.HasIndex(e => e.Titulo)
-                    .HasName("UQ__Tipo_usu__7B406B56979105FE")
+                    .HasName("UQ__Tipo_usu__7B406B56173562C1")
                     .IsUnique();
 
                 entity.Property(e => e.Titulo).IsUnicode(false);
@@ -104,12 +104,14 @@ namespace backend.Models
             modelBuilder.Entity<Usuario>(entity =>
             {
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__Usuario__A9D105349A33456D")
+                    .HasName("UQ__Usuario__A9D105343DB1A593")
                     .IsUnique();
 
                 entity.Property(e => e.Email).IsUnicode(false);
 
                 entity.Property(e => e.Nome).IsUnicode(false);
+
+                entity.Property(e => e.Senha).IsUnicode(false);
 
                 entity.HasOne(d => d.TipoUsuario)
                     .WithMany(p => p.Usuario)

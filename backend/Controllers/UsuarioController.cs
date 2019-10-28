@@ -1,4 +1,4 @@
-using backend.Models;
+using backend.Domains;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +16,7 @@ namespace backend.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        gufosContext _contexto = new gufosContext();
+        GufosContext _contexto = new GufosContext();
 
         // GET: api/Usuario
         [HttpGet]

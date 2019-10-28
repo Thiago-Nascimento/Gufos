@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace backend.Models
+namespace backend.Domains
 {
     public partial class Usuario
     {
@@ -22,7 +22,7 @@ namespace backend.Models
         [StringLength(255)]
         public string Email { get; set; }
         [Required]
-        [Column(TypeName = "text")]
+        [StringLength(255)]
         public string Senha { get; set; }
         [Column("Tipo_usuario_id")]
         public int? TipoUsuarioId { get; set; }
