@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using backend.Repositories;
 
 // Adiciona a arvore de objetos 
 // dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson
@@ -16,13 +17,13 @@ namespace backend.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        GufosContext _contexto = new GufosContext();
+        UsuarioRepository _repositorio = new UsuarioRepository();
 
         // GET: api/Usuario
         [HttpGet]
         public async Task<ActionResult<List<Usuario>>> Get()
         {
-            var usuarios = await _contexto.Usuario.Include("Presenca").ToListAsync();
+            var usuarios = await _repositorio.Listar();
 
             if(usuarios == null) {
                 return NotFound();
@@ -36,7 +37,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> Get(int id)
         {
-            var usuario = await _contexto.Usuario.Include("Presenca").FirstOrDefaultAsync(e => e.UsuarioId == id);
+            var usuario = await _repositorio.BuscarPorID(id);
 
             if(usuario == null) {
                 return NotFound();
@@ -51,9 +52,7 @@ namespace backend.Controllers
         {
             try
             {
-                // Tratamento contra SQL Injection
-                await _contexto.AddAsync(usuario);
-                await _contexto.SaveChangesAsync();
+                await _repositorio.Salvar(usuario);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -69,16 +68,13 @@ namespace backend.Controllers
         {
             if(id != usuario.UsuarioId){
                 return BadRequest();
-            }
-
-            // Comparamos os atributos que foram modificados através do EF
-            _contexto.Entry(usuario).State = EntityState.Modified;
+            }            
             
             try {
-                await _contexto.SaveChangesAsync(); 
+                await _repositorio.Alterar(usuario);
             } catch (DbUpdateConcurrencyException) {
                 // Verfica se o objeto inserido existe no banco
-                var usuario_valido = await _contexto.Usuario.FindAsync(id);
+                var usuario_valido = await _repositorio.BuscarPorID(id);
 
                 if(usuario_valido == null) {
                     return NotFound();
@@ -93,14 +89,11 @@ namespace backend.Controllers
         // DELETE api/usuario/id
         [HttpDelete("{id}")]
         public async Task<ActionResult<Usuario>> Delete(int id){
-            var usuario = await _contexto.Usuario.FindAsync(id);
+            var usuario = await _repositorio.BuscarPorID(id);
 
             if(usuario == null) {
                 return NotFound();
-            }
-
-            _contexto.Usuario.Remove(usuario);
-            await _contexto.SaveChangesAsync();
+            }            
             
             return usuario;
         }
