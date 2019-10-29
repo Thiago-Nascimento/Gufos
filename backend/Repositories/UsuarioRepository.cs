@@ -21,8 +21,7 @@ namespace backend.Repositories
         {
             using(GufosContext _contexto = new GufosContext()){
                 return await _contexto.Usuario.Include("Presenca").FirstOrDefaultAsync(e => e.UsuarioId == id);;
-            }
-            
+            }            
         }
 
         public async Task<Usuario> Excluir(Usuario usuario)
@@ -31,16 +30,14 @@ namespace backend.Repositories
                 _contexto.Usuario.Remove(usuario);
                 await _contexto.SaveChangesAsync();
                 return usuario;
-            }
-            
+            }            
         }
 
         public async Task<List<Usuario>> Listar()
         {
             using(GufosContext _contexto = new GufosContext()){
-                return await _contexto.Usuario.Include("Presenca").ToListAsync();
-            }
-            
+                return await _contexto.Usuario.Include("Presenca").Include("TipoUsuario").ToListAsync();
+            }            
         }
 
         public async Task<Usuario> Salvar(Usuario usuario)

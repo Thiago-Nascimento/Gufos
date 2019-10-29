@@ -21,6 +21,7 @@ namespace backend.Controllers
 
         // GET: api/Usuario
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Usuario>>> Get()
         {
             var usuarios = await _repositorio.Listar();
@@ -33,7 +34,7 @@ namespace backend.Controllers
         }
         
         // GET: api/Usuario/2
-        [Authorize]
+        [Authorize(Roles = "Administrador")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> Get(int id)
         {
