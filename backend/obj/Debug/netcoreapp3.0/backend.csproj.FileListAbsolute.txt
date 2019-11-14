@@ -61,3 +61,7 @@ C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Microsoft.IdentityMod
 C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\System.Web.Cors.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\System.Net.Http.Formatting.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\System.Web.Http.dll
+C:\Users\FIC\Desktop\Gufos\backend\bin\Debug\netcoreapp3.0\System.Web.Http.Cors.dll
