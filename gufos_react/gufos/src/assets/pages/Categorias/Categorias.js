@@ -13,7 +13,9 @@ class Categorias extends Component {
             editarModal : {
                 categoriaId : "",
                 titulo : ""
-            }
+            },
+            loading: false,  // State que indica carregamento da página
+            erroMsg: ""
         }
 
         this.cadastrarCategoria = this.cadastrarCategoria.bind(this);
@@ -46,12 +48,18 @@ class Categorias extends Component {
 
     // GET - Listar 
     listaAtualizada = () => {
+        this.setState({loading: true});
+        
         fetch("http://localhost:5000/api/Categoria")
         .then(response => response.json())
         .then(data => {
             console.log("Mostrando a lista: ",data);
             this.setState({lista : data})
         });
+
+        setTimeout(() => {
+            this.setState({loading: false});
+        }, 2000);
     }
 
     // POST
@@ -75,7 +83,8 @@ class Categorias extends Component {
     }
 
     deletarCategoria(id) {
-        console.log("Excluindo...")
+        console.log("Excluindo...");
+        this.setState({erroMsg: ""});
         fetch("http://localhost:5000/api/Categoria/"+id, {
             method : "DELETE",
             headers : {
@@ -88,7 +97,10 @@ class Categorias extends Component {
             this.listaAtualizada();
             this.setState( () => ({ lista : this.state.lista }))
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error)
+            this.setState({erroMsg: "Não foi possível excluir esta categoria, verifique se não há eventos que a utilize."})
+        })
     }
 
     alterarCategoria = (categoria) => {
@@ -171,9 +183,14 @@ class Categorias extends Component {
                             }
                         </tbody>
                         </table>
+
+                        { this.state.erroMsg && <div className="text-danger">{this.state.erroMsg}</div> }
+                        { this.state.loading && <i className="fas fa-spinner fa-spin fa-2x blue-text"></i>}
+
                     </div>
 
-                    <div className="container" id="conteudoPrincipal-cadastro">
+                    {/* container fa-spin */}
+                    <div className="container" id="conteudoPrincipal-cadastro">  
                         <h2 className="conteudoPrincipal-cadastro-titulo">
                         Cadastrar Tipo de Evento
                         </h2>

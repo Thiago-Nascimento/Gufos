@@ -1,62 +1,196 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Footer from '../../componentes/Footer/Footer';
 
 class Eventos extends Component {
-    render(){
+    constructor() {
+        super();
+        this.state = {
+            listaEventos: [],
+            listaCategorias: [],
+            campo: "",
+            eventoCadastrando: {
+                titulo: "",
+                categoriaId: "",
+                acessoLivre: "",
+                dataEvento: ""
+            }
+        }
+
+        this.cadastrarEvento = this.cadastrarEvento.bind(this);
+    }
+
+    UNSAFE_componentWillMount() {
+        document.title = this.props.titulo_pagina;
+        console.log("Carregando...");
+    }
+
+    componentDidMount() {
+        console.log("Carregado");
+        this.listarEventos();
+        this.listarCategorias();
+    }
+
+    componentDidUpdate() {
+        console.log("Atualizando");
+    }
+
+    componentWillUnmount() {
+        console.log("Saindo");
+    }
+
+    listarEventos = () => {
+        fetch("http://localhost:5000/api/Evento")
+            .then(response => response.json())
+            .then(data => {
+                console.log("Lista de Eventos: ", data);
+                this.setState({ listaEventos: data })
+            })
+    }
+
+    listarCategorias = () => {
+        fetch("http://localhost:5000/api/Categoria")
+            .then(response => response.json())
+            .then(data => {
+                console.log("Mostrando a lista: ", data);
+                this.setState({ listaCategorias: data })
+            });
+    }
+
+    cadastrarEvento(event) {
+        event.preventDefault();
+        // let evento = this.state.eventoCadastrando;
+
+        console.log("Cadastrandoeve tno: ", this.state.eventoCadastrando);
+        console.log("Cadastrandoeve tno: ", this.state.eventoCadastrando.titulo);
+        console.log("Cadastrandoeve tno: ", this.state.eventoCadastrando.dataEvento);
+
+        fetch("http://localhost:5000/api/Evento", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                titulo: this.state.eventoCadastrando.titulo,
+                categoriaId: this.state.eventoCadastrando.categoriaId,
+                acessoLivre: this.state.eventoCadastrando.acessoLivre === "1" ? "true" : "false",
+                dataEvento: this.state.eventoCadastrando.dataEvento,
+            })
+        })
+            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+                this.listarEventos();
+            })
+            .catch(error => console.log(error))
+
+    }
+
+    atualizaEstado = (input) => {
+        let nomePropriedade = input.target.name;
+
+        // this.setState({ eventoCadastrando : {
+        //     [input.target.name] : input.target.value
+        // }}, () => console.log(this.state.eventoCadastrando[nomePropriedade]));
+
+        this.setState({
+            eventoCadastrando: {
+                ...this.state.eventoCadastrando,
+                [input.target.name]: input.target.value
+            }
+        }, () => console.log(this.state.eventoCadastrando[nomePropriedade]));
+
+
+        // this.setState(prevState => ({
+        //     eventoCadastrando: { ...prevState,
+        //         [event.target.name]: {
+        //             [event.target.name]: e.target.value,
+        //         },
+        //     }
+        // }));
+    }
+
+    render() {
         return (
             <div>
                 <main className="conteudoPrincipal">
-                <section className="conteudoPrincipal-cadastro">
-                    <h1 className="conteudoPrincipal-cadastro-titulo">Eventos</h1>
-                    <div className="container" id="conteudoPrincipal-lista">
-                    <table id="tabela-lista">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Evento</th>
-                            <th>Data</th>
-                            <th>Acesso Livre</th>
-                            <th>Tipo do Evento</th>
-                        </tr>
-                        </thead>
+                    <section className="conteudoPrincipal-cadastro">
+                        <h1 className="conteudoPrincipal-cadastro-titulo">Eventos</h1>
+                        <div className="container" id="conteudoPrincipal-lista">
+                            <table id="tabela-lista">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Evento</th>
+                                        <th>Data</th>
+                                        <th>Acesso Livre</th>
+                                        <th>Tipo do Evento</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabela-lista-corpo">
+                                    {
+                                        this.state.listaEventos.map(function (evento) {
+                                            return (
+                                                <tr key={evento.eventoId}>
+                                                    <td>{evento.eventoId}</td>
+                                                    <td>{evento.titulo}</td>
+                                                    <td>{evento.dataEvento}</td>
+                                                    <td>{evento.acessoLivre}</td>
+                                                    <td>{evento.categoria.titulo}</td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
 
-                        <tbody id="tabela-lista-corpo"></tbody>
-                    </table>
-                    </div>
-
-                    <div className="container" id="conteudoPrincipal-cadastro">
-                    <h2 className="conteudoPrincipal-cadastro-titulo">Cadastrar Evento</h2>
-                    <div className="container">
-                        <input
-                        type="text"
-                        id="evento__titulo"
-                        placeholder="título do evento"
-                        />
-                        <input type="text" id="evento__data" placeholder="dd/MM/yyyy" />
-                        <select id="option__acessolivre">
-                        <option value="1">Livre</option>
-                        <option value="0">Restrito</option>
-                        </select>
-                        <select id="option__tipoevento">
-                        <option value="0" disabled>Tipo do Evento</option>
-                        </select>
-                        <textarea
-                        rows="3"
-                        cols="50"
-                        placeholder="descrição do evento"
-                        id="evento__descricao"
-                        ></textarea>
-                    </div>
-                    <button
-                        className="conteudoPrincipal-btn conteudoPrincipal-btn-cadastro"
-                        onclick="cadastrarEvento()"
-                    >
-                        Cadastrar
-                    </button>
-                    </div>
-                </section>
+                        <form onSubmit={this.cadastrarEvento}>
+                            <div className="container" id="conteudoPrincipal-cadastro">
+                                <h2 className="conteudoPrincipal-cadastro-titulo">Cadastrar Evento</h2>
+                                <div className="container">
+                                    <input
+                                        type="text"
+                                        id="evento__titulo"
+                                        placeholder="título do evento"
+                                        value={this.state.eventoCadastrando.titulo}
+                                        // onChange={this.atualizaEstado.bind(this)}
+                                        onChange={this.atualizaEstado}
+                                        name="titulo"
+                                    />
+                                    <input type="text"
+                                        id="evento__data"
+                                        placeholder="dd/MM/yyyy"
+                                        value={this.state.eventoCadastrando.dataEvento}
+                                        onChange={this.atualizaEstado}
+                                        // onChange={this.atualizaEstado.bind(this)}
+                                        name="dataEvento"
+                                    />
+                                    <select id="option__acessolivre">
+                                        <option value="1">Livre</option>
+                                        <option value="0">Restrito</option>
+                                    </select>
+                                    <select id="option__tipoevento">
+                                        <option value="0" disabled>Tipo do Evento</option>
+                                        {
+                                            this.state.listaCategorias.map(function (categoria) {
+                                                return (
+                                                    <option value={categoria.titulo}>{categoria.titulo}</option>
+                                                )
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                                <button
+                                    className="conteudoPrincipal-btn conteudoPrincipal-btn-cadastro"
+                                    type="submit"
+                                >
+                                    Cadastrar
+                        </button>
+                            </div>
+                        </form>
+                    </section>
                 </main>
-                <Footer/>
+                <Footer />
             </div>
         );
     }

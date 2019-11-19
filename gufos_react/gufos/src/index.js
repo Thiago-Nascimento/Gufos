@@ -25,7 +25,7 @@ const Rotas = (
             <Switch>
                 <Route exact path = "/" component={App}/>
                 <Route path = "/categorias" component={() => <Categorias titulo_pagina = "Categorias - Gufos"/>}/>
-                <Route path = "/eventos" component={Eventos}/>
+                <Route path = "/eventos" component={() => <Eventos titulo_pagina = "Eventos - Gufos"/>}/>
                 <Route path = "/login" component={Login}/>
                 <Route component={NotFound}/>
             </Switch>
