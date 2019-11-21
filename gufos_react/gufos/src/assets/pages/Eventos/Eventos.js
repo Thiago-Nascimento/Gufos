@@ -12,7 +12,8 @@ class Eventos extends Component {
                 titulo: "",
                 categoriaId: "",
                 acessoLivre: "",
-                dataEvento: ""
+                dataEvento: "",
+
             }
         }
 
@@ -61,8 +62,6 @@ class Eventos extends Component {
         // let evento = this.state.eventoCadastrando;
 
         console.log("Cadastrandoeve tno: ", this.state.eventoCadastrando);
-        console.log("Cadastrandoeve tno: ", this.state.eventoCadastrando.titulo);
-        console.log("Cadastrandoeve tno: ", this.state.eventoCadastrando.dataEvento);
 
         fetch("http://localhost:5000/api/Evento", {
             method: "POST",
@@ -88,25 +87,12 @@ class Eventos extends Component {
     atualizaEstado = (input) => {
         let nomePropriedade = input.target.name;
 
-        // this.setState({ eventoCadastrando : {
-        //     [input.target.name] : input.target.value
-        // }}, () => console.log(this.state.eventoCadastrando[nomePropriedade]));
-
         this.setState({
             eventoCadastrando: {
                 ...this.state.eventoCadastrando,
                 [input.target.name]: input.target.value
             }
         }, () => console.log(this.state.eventoCadastrando[nomePropriedade]));
-
-
-        // this.setState(prevState => ({
-        //     eventoCadastrando: { ...prevState,
-        //         [event.target.name]: {
-        //             [event.target.name]: e.target.value,
-        //         },
-        //     }
-        // }));
     }
 
     render() {
@@ -135,7 +121,7 @@ class Eventos extends Component {
                                                     <td>{evento.titulo}</td>
                                                     <td>{evento.dataEvento}</td>
                                                     <td>{evento.acessoLivre}</td>
-                                                    <td>{evento.categoria.titulo}</td>
+                                                    {/* <td>{evento.categoria.titulo}</td> */}
                                                 </tr>
                                             )
                                         })
@@ -153,7 +139,6 @@ class Eventos extends Component {
                                         id="evento__titulo"
                                         placeholder="título do evento"
                                         value={this.state.eventoCadastrando.titulo}
-                                        // onChange={this.atualizaEstado.bind(this)}
                                         onChange={this.atualizaEstado}
                                         name="titulo"
                                     />
@@ -162,19 +147,18 @@ class Eventos extends Component {
                                         placeholder="dd/MM/yyyy"
                                         value={this.state.eventoCadastrando.dataEvento}
                                         onChange={this.atualizaEstado}
-                                        // onChange={this.atualizaEstado.bind(this)}
                                         name="dataEvento"
                                     />
-                                    <select id="option__acessolivre">
+                                    <select id="option__acessolivre" name="acessoLivre" onChange={this.atualizaEstado}>
                                         <option value="1">Livre</option>
                                         <option value="0">Restrito</option>
                                     </select>
-                                    <select id="option__tipoevento">
+                                    <select id="option__tipoevento" name="categoriaId" onChange={this.atualizaEstado}>
                                         <option value="0" disabled>Tipo do Evento</option>
                                         {
                                             this.state.listaCategorias.map(function (categoria) {
                                                 return (
-                                                    <option value={categoria.titulo}>{categoria.titulo}</option>
+                                                    <option value={categoria.categoriaId}>{categoria.titulo}</option>
                                                 )
                                             })
                                         }
