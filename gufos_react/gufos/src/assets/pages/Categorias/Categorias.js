@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Footer from '../../componentes/Footer/Footer';
 import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBInput } from 'mdbreact';
+import Cabecalho from '../../componentes/Cabecalho/Cabecalho';
 
 class Categorias extends Component {
     
@@ -151,6 +152,7 @@ class Categorias extends Component {
     render(){
         return (
             <div>
+                <Cabecalho/> 
                 <main className="conteudoPrincipal">
                     <section className="conteudoPrincipal-cadastro">
                     <h1 className="conteudoPrincipal-cadastro-titulo">Categorias</h1>

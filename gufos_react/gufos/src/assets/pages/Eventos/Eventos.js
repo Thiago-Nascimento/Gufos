@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Footer from '../../componentes/Footer/Footer';
+import Cabecalho from '../../componentes/Cabecalho/Cabecalho';
 
 class Eventos extends Component {
     constructor() {
@@ -8,6 +9,7 @@ class Eventos extends Component {
             listaEventos: [],
             listaCategorias: [],
             campo: "",
+            erroMsg: "",
             eventoCadastrando: {
                 titulo: "",
                 categoriaId: "",
@@ -18,6 +20,7 @@ class Eventos extends Component {
         }
 
         this.cadastrarEvento = this.cadastrarEvento.bind(this);
+        this.deletarEvento = this.deletarEvento.bind(this);
     }
 
     UNSAFE_componentWillMount() {
@@ -95,9 +98,31 @@ class Eventos extends Component {
         }, () => console.log(this.state.eventoCadastrando[nomePropriedade]));
     }
 
+    deletarEvento(id) {
+        console.log("Excluindo Evento...");
+        this.setState({erroMsg: ""});
+        fetch("http://localhost:5000/api/Eventos/" + id, {
+            method: "DELETE",
+            headers: {
+                "Content-Type" : "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(response => {
+            console.log(response);
+            this.listarEventos();
+            this.setState(() => ({listaEventos: this.state.listaEventos}))
+        })
+        .catch(error => {
+            console.log(error);
+            this.setState({erroMsg: "Não foi possível excluir este evento"})
+        })
+    }
+
     render() {
         return (
             <div>
+                <Cabecalho/>
                 <main className="conteudoPrincipal">
                     <section className="conteudoPrincipal-cadastro">
                         <h1 className="conteudoPrincipal-cadastro-titulo">Eventos</h1>
@@ -110,6 +135,7 @@ class Eventos extends Component {
                                         <th>Data</th>
                                         <th>Acesso Livre</th>
                                         <th>Tipo do Evento</th>
+                                        <th>Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tabela-lista-corpo">
@@ -122,9 +148,10 @@ class Eventos extends Component {
                                                     <td>{evento.dataEvento}</td>
                                                     <td>{evento.acessoLivre}</td>
                                                     {/* <td>{evento.categoria.titulo}</td> */}
+                                                    <td><button onClick={() => this.deletarEvento(evento.eventoId)}>Excluir</button></td>
                                                 </tr>
                                             )
-                                        })
+                                        }.bind(this))
                                     }
                                 </tbody>
                             </table>

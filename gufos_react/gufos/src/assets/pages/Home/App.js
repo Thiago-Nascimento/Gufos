@@ -1,16 +1,18 @@
 import React from 'react';
 import Footer from '../../componentes/Footer/Footer';
 
+
 function App() {
   return (
     <div className="App">
+           
       <section className="conteudoImagem">
         <div>
           <h1>Gufos</h1>
           <h2>Área de eventos da Escola SENAI de Informática.</h2>
         </div>
       </section>
-
+      
       <main className="conteudoPrincipal">
         <section id="conteudoPrincipal-eventos">
           <h1 id="conteudoPrincipal-eventos-titulo">Próximos Eventos</h1>
