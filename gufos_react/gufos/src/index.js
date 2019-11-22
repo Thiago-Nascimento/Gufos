@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
@@ -17,7 +17,32 @@ import Login from './assets/pages/Login/Login';
 import NotFound from './assets/pages/NotFound/NotFound';
 
 import * as serviceWorker from './serviceWorker';
-import {Route, BrowserRouter as Router, Switch} from 'react-router-dom';
+import {Route, BrowserRouter as Router, Switch, Redirect} from 'react-router-dom';
+import { usuarioAutenticado, parseJwt } from './services/auth';
+
+const PermissãoAdmin = ({component: Component}) => (
+    <Route
+        render={props => 
+            usuarioAutenticado() && parseJwt().Role === "Administrador" ? (
+                <Component {...props}/>
+            ) : (
+                <Redirect to={{pathname: "/login"}}/>
+            )
+        }
+    />
+)
+
+const PermissãoAluno = ({component: Component}) => (
+    <Route
+        render={props => 
+            usuarioAutenticado() && parseJwt().Role === "Aluno" ? (
+                <Component {...props}/>
+            ) : (
+                <Redirect to={{pathname: "/login"}}/>
+            )
+        }
+    />
+)
 
 const Rotas = (
     <Router>
@@ -25,8 +50,8 @@ const Rotas = (
             <Switch>
                 <Route exact path = "/" component={App}/>
                 {/* <Route path = "/categorias" component={() => <Categorias titulo_pagina = "Categorias - Gufos"/>}/> */}
-                <Route path = "/categorias" component={Categorias}/>
-                <Route path = "/eventos" component={Eventos}/>
+                <PermissãoAdmin path = "/categorias" component={Categorias}/>
+                <PermissãoAluno path = "/eventos" component={Eventos}/>
                 {/* <Route path = "/login" component={() => <Login titulo_pagina = "Login - Gufos"/>}/> */}
                 <Route path = "/login" component={Login}/>
                 <Route component={NotFound}/>
