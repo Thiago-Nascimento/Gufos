@@ -4,6 +4,8 @@ import '../../css/login.css'
 import Cabecalho from '../../componentes/Cabecalho/Cabecalho';
 import Img from '../../img/icon-login.png'
 import Axios from 'axios';
+import {parseJwt} from '../../../services/auth'
+import 'react-router'
 
 class Login extends Component {
     constructor()
@@ -12,7 +14,13 @@ class Login extends Component {
 
         this.state = {
             email: "",
-            senha: ""
+            senha: "",
+            erroMensagem: "",
+            isLoading: false     // Flag que verifica se a requisição está em andamento
+        }
+
+        this.props = {
+
         }
     }
 
@@ -22,6 +30,10 @@ class Login extends Component {
 
     realizarLogin = (event) => {
         event.preventDefault();
+        
+        this.setState({ erroMensagem: "" });
+        this.setState({ isLoading: true });
+        
         let config = {
             headers: {
                 "Content-Type":"application/json",
@@ -34,10 +46,28 @@ class Login extends Component {
             senha: this.state.senha
         }, config)
         .then(response => {
-            console.log("Retorno do login: ", response)
+            // console.log("Retorno do login: ", response)
+            // console.log("Retorno do login: ", response.status)
+            
+            // Caso o retorno da requisição seja 200, salva o token na chave "usuario-gufos", em local storage
+            if(response.status === 200){
+                localStorage.setItem("usuario-gufos", response.data.token);
+                this.setState({ isLoading: false })
+                console.log("O token é: ", response.data.token);
+
+                console.log(parseJwt().Role);
+
+                if(parseJwt().Role === "Administrador"){
+                    this.props.history.push('/categorias')
+                } else if (parseJwt().Role === "Aluno"){
+                    this.props.history.push('/eventos')
+                }
+            }
         })
         .catch(erro => {
-            console.log("Erro: ", erro)
+            console.log("Erro: ", erro);
+            this.setState({ erroMensagem: "Email ou senha inválido" });
+            this.setState({ isLoading: false })
         })
     }
 
@@ -81,11 +111,23 @@ class Login extends Component {
                                 onChange={this.atualizaEstado}
                             />
                             </div>
-                            <div className="item">
-                            <button className="btn btn__login" id="btn__login" type="submit">
-                                Login
-                            </button>
-                            </div>
+                            <p style={{color : "red"}}>{this.state.erroMensagem}</p>
+                            {
+                                this.state.isLoading === true &&
+                                <div className="item">
+                                <button className="btn btn__login" id="btn__login" type="submit" disabled>
+                                    Loading...
+                                </button>
+                                </div>
+                            }
+                            {
+                                this.state.isLoading === false &&
+                                <div className="item">
+                                <button className="btn btn__login" id="btn__login" type="submit">
+                                    Login
+                                </button>
+                                </div>
+                            }
                         </form>
                         </div>
                     </div>

@@ -1,11 +1,14 @@
 import React from 'react';
 import Footer from '../../componentes/Footer/Footer';
+import Cabecalho from '../../componentes/Cabecalho/Cabecalho';
 
 
 function App() {
   return (
     <div className="App">
            
+      <Cabecalho/>
+      
       <section className="conteudoImagem">
         <div>
           <h1>Gufos</h1>
