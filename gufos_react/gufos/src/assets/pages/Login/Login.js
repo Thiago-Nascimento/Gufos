@@ -6,11 +6,12 @@ import Img from '../../img/icon-login.png'
 import Axios from 'axios';
 import {parseJwt} from '../../../services/auth'
 import 'react-router'
+import api from '../../../services/api';
 
 class Login extends Component {
-    constructor()
+    constructor(props)
     {
-        super();
+        super(props);
 
         this.state = {
             email: "",
@@ -34,17 +35,22 @@ class Login extends Component {
         this.setState({ erroMensagem: "" });
         this.setState({ isLoading: true });
         
-        let config = {
-            headers: {
-                "Content-Type":"application/json",
-                "Acess-Control-Allow-Origin":"*"  //Cors
-            }
-        }
+        // let config = {
+        //     headers: {
+        //         "Content-Type":"application/json",
+        //         "Acess-Control-Allow-Origin":"*"  //Cors
+        //     }
+        // }
 
-        Axios.post("http://localhost:5000/api/Login", {
+        // Axios.post("http://localhost:5000/api/Login", {
+        //     email: this.state.email,
+        //     senha: this.state.senha
+        // }, config)
+
+        api.post("/login", {
             email: this.state.email,
             senha: this.state.senha
-        }, config)
+        })
         .then(response => {
             // console.log("Retorno do login: ", response)
             // console.log("Retorno do login: ", response.status)

@@ -49,10 +49,8 @@ const Rotas = (
         <div>
             <Switch>
                 <Route exact path = "/" component={App}/>
-                {/* <Route path = "/categorias" component={() => <Categorias titulo_pagina = "Categorias - Gufos"/>}/> */}
                 <PermissãoAdmin path = "/categorias" component={Categorias}/>
                 <PermissãoAluno path = "/eventos" component={Eventos}/>
-                {/* <Route path = "/login" component={() => <Login titulo_pagina = "Login - Gufos"/>}/> */}
                 <Route path = "/login" component={Login}/>
                 <Route component={NotFound}/>
             </Switch>
